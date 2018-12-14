@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.AssassinG.ScsyERP.OnWayWatch.core.dao.impl.WarnDaoImpl">
+
+	<!-- 用户信息表 -->
+	<sql id="t_warn"> t_warn </sql>
+
+	<resultMap id="beanMap" type="WarnBean" extends="cn.AssassinG.ScsyERP.common.entity.BaseEntity.BaseEntityMap">
+        <result column="out_storage_form" property="OutStorageForm" />
+        <result column="truck" property="Truck" />
+        <result column="truck_log" property="TruckLog" />
+        <result column="time" property="Time" />
+        <result column="gpsx" property="GPSX" />
+        <result column="gpsy" property="GPSY" />
+        <result column="warn_type" property="WarnType" typeHandler="cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler" />
+        <result column="status" property="Status" typeHandler="cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler" />
+        <result column="warn_value" property="WarnValue" />
+        <result column="pictures" property="Pictures" typeHandler="cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler" />
+	</resultMap>
+
+	<insert id="insert" parameterType="WarnBean" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="t_warn"/> (corporation, create_time, update_time, delete_time, is_deleted, out_storage_form, truck, truck_log, time,
+                                                      gpsx, gpsy, warn_type, status, warn_value, pictures)
+		values (#{Corporation}, now(), now(), NULL , FALSE, #{OutStorageForm}, #{Truck}, #{TruckLog}, #{Time}, #{GPSX}, #{GPSY}, #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler},
+                  #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}, #{WarnValue}, #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler})
+	</insert>
+
+	<insert id="batchInsert" parameterType="List" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="t_warn"/> (corporation, create_time, update_time, delete_time, is_deleted, out_storage_form, truck, truck_log, time,
+        gpsx, gpsy, warn_type, status, warn_value, pictures)
+		values
+        <foreach collection="list" item="obj" separator=",">
+            (#{Corporation}, now(), now(), NULL , FALSE, #{OutStorageForm}, #{Truck}, #{TruckLog}, #{Time}, #{GPSX}, #{GPSY}, #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler},
+            #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}, #{WarnValue}, #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler})
+        </foreach>
+	</insert>
+	
+	<update id="update" parameterType="WarnBean">
+		update <include refid="t_warn"/>
+		<set>
+			update_time = now(),
+            out_storage_form = #{OutStorageForm},
+            truck =  #{Truck},
+            truck_log = #{TruckLog},
+            time =  #{Time},
+            gpsx =  #{GPSX},
+            gpsy =  #{GPSY},
+            warn_type = #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler},
+            status = #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler},
+            warn_value =  #{WarnValue},
+            pictures = #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler}
+		</set>
+		<where>
+			id = #{Id}
+		</where>
+	</update>
+
+    <update id="batchUpdate" parameterType="List">
+        update <include refid="t_warn"/>
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="update_time =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id=#{item.Id} then now()
+                </foreach>
+            </trim>
+            <trim prefix="out_storage_form =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.OutStorageForm!=null">
+                        when id=#{item.Id} then #{item.OutStorageForm}
+                    </if>
+                </foreach>
+            </trim>
+			<trim prefix="truck =case" suffix="end,">
+				<foreach collection="list" item="item">
+					<if test="item.Truck!=null">
+						when id=#{item.Id} then #{item.Truck}
+					</if>
+				</foreach>
+			</trim>
+            <trim prefix="truck_log =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.TruckLog!=null">
+                        when id=#{item.Id} then #{item.TruckLog}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="time =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Time!=null">
+                        when id=#{item.Id} then #{item.Time}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="gpsx =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.GPSX!=null">
+                        when id=#{item.Id} then #{item.GPSX}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="gpsy =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.GPSY!=null">
+                        when id=#{item.Id} then #{item.GPSY}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="warn_type =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.WarnType!=null">
+                        when id=#{item.Id} then #{item.LiftWorkers,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="status =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Status!=null">
+                        when id=#{item.Id} then #{item.Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="warn_value =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.WarnValue!=null">
+                        when id=#{item.Id} then #{item.WarnValue}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="pictures =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Pictures!=null">
+                        when id=#{item.Id} then #{item.Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            <foreach collection="list" separator="or" item="item">
+                id=#{item.Id}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="delete" parameterType="WarnBean">
+        update <include refid="t_warn"/>
+        <set>
+            delete_time = now(),
+			update_time = now(),
+            is_deleted =  true
+        </set>
+        <where>
+            id = #{Id}
+        </where>
+    </update>
+
+	<update id="deleteById" parameterType="long">
+		update <include refid="t_warn"/>
+		<set>
+			delete_time = now(),
+			update_time = now(),
+			is_deleted =  true
+		</set>
+		<where>
+			id = #{Id}
+		</where>
+	</update>
+	
+  	<select id="getById" parameterType="long" resultMap="beanMap">
+    	select * from <include refid="t_warn"/> where id = #{Id}
+  	</select>
+  	
+  	<select id="listAll" resultMap="beanMap">
+    	select * from <include refid="t_warn"/> order by id asc
+  	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="Id != null"> and id = #{Id}</if>
+		<if test="Corporation != null"> and corporation = #{Corporation}</if>
+		<if test="createTimeBegin != null"> and create_time &gt;= #{createTimeBegin}</if>
+		<if test="createTimeEnd != null"> and create_time &lt;= #{createTimeEnd}</if>
+		<if test="updateTimeBegin != null"> and update_time &gt;= #{updateTimeBegin}</if>
+		<if test="updateTimeEnd != null"> and update_time &lt;= #{updateTimeEnd}</if>
+		<if test="deleteTimeBegin != null"> and delete_time &gt;= #{deleteTimeBegin}</if>
+		<if test="deleteTimeEnd != null"> and delete_time &lt;= #{deleteTimeEnd}</if>
+        <if test="IfDeleted != null"> and is_deleted = #{IfDeleted}</if>
+        <if test="OutStorageForm != null"> and out_storage_form = #{OutStorageForm}</if>
+        <if test="Truck != null"> and truck = #{Truck}</if>
+        <if test="TruckLog != null"> and truck_log = #{TruckLog}</if>
+        <if test="TimeBegin != null"> and time &gt;= #{TimeBegin}</if>
+        <if test="TimeEnd != null"> and time &lt;= #{TimeEnd}</if>
+        <if test="WarnType != null"> and warn_type = #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler}</if>
+        <if test="Status != null"> and status = #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}</if>
+        <!-- Like query -->
+        <!--<if test="InStorageNumber != null and InStorageNumber != ''"> and instorage_number like CONCAT(CONCAT('%', #{InStorageNumber}), '%')</if>-->
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="t_warn"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by id asc]]>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="t_warn"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by id asc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="t_warn"/>
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+	
+</mapper>

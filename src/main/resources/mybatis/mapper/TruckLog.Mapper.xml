@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.AssassinG.ScsyERP.OnWayWatch.core.dao.impl.TruckLogDaoImpl">
+
+	<!-- 用户信息表 -->
+	<sql id="t_truck_log"> t_truck_log </sql>
+
+	<resultMap id="beanMap" type="TruckLogBean" extends="cn.AssassinG.ScsyERP.common.entity.BaseEntity.BaseEntityMap">
+        <result column="out_storage_form" property="OutStorageForm" />
+        <result column="truck" property="Truck" />
+        <result column="time" property="Time" />
+        <result column="distance" property="Distance" />
+        <result column="gpsx" property="GPSX" />
+        <result column="gpsy" property="GPSY" />
+        <result column="speed" property="Speed" />
+        <result column="fuel_vol" property="FuelVol" />
+        <result column="left_tire_pressure" property="LeftTirePressure" />
+        <result column="right_tire_pressure" property="RightTirePressure" />
+        <result column="left_tire_temp" property="LeftTireTemp" />
+        <result column="right_tire_temp" property="RightTireTemp" />
+        <result column="posture" property="Posture" />
+        <result column="has_warn" property="HasWarn" />
+        <result column="warn" property="Warn" />
+	</resultMap>
+
+	<insert id="insert" parameterType="TruckLogBean" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="t_truck_log"/> (corporation, create_time, update_time, delete_time, is_deleted, out_storage_form, truck, time, distance,
+                                      gpsx, gpsy, speed, fuel_vol, left_tire_pressure, right_tire_pressure, left_tire_temp, right_tire_temp, posture, has_warn, warn)
+		values (#{Corporation}, now(), now(), NULL , FALSE, #{OutStorageForm}, #{Truck}, #{Time}, #{Distance}, #{GPSX}, #{GPSY}, #{Speed}, #{FuelVol},
+              #{LeftTirePressure}, #{RightTirePressure}, #{LeftTireTemp}, #{RightTireTemp}, #{Posture}, #{HasWarn}, #{Warn})
+	</insert>
+
+	<insert id="batchInsert" parameterType="List" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="t_truck_log"/> (corporation, create_time, update_time, delete_time, is_deleted, out_storage_form, truck, time, distance,
+        gpsx, gpsy, speed, fuel_vol, left_tire_pressure, right_tire_pressure, left_tire_temp, right_tire_temp, posture, has_warn, warn)
+		values
+        <foreach collection="list" item="obj" separator=",">
+            (#{obj.Corporation}, now(), now(), NULL , FALSE, #{obj.OutStorageForm}, #{obj.Truck}, #{obj.Time}, #{obj.Distance}, #{obj.GPSX}, #{obj.GPSY}, #{obj.Speed}, #{obj.FuelVol},
+            #{obj.LeftTirePressure}, #{obj.RightTirePressure}, #{obj.LeftTireTemp}, #{obj.RightTireTemp}, #{obj.Posture}, #{obj.HasWarn}, #{obj.Warn})
+        </foreach>
+	</insert>
+	
+	<update id="update" parameterType="TruckLogBean">
+		update <include refid="t_truck_log"/>
+		<set>
+			update_time = now(),
+            out_storage_form = #{OutStorageForm},
+            truck = #{Truck},
+            time =  #{Time},
+            distance = #{Distance},
+            gpsx =  #{GPSX},
+            gpsy =  #{GPSY},
+            speed =  #{Speed},
+            fuel_vol = #{FuelVol},
+            left_tire_pressure = #{LeftTirePressure},
+            right_tire_pressure =  #{RightTirePressure},
+            left_tire_temp =  #{LeftTireTemp},
+            right_tire_temp =  #{RightTireTemp},
+            posture =  #{Posture},
+            has_warn = #{HasWarn},
+            warn = #{Warn}
+		</set>
+		<where>
+			id = #{Id}
+		</where>
+	</update>
+
+    <update id="batchUpdate" parameterType="List">
+        update <include refid="t_truck_log"/>
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="update_time =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id=#{item.Id} then now()
+                </foreach>
+            </trim>
+            <trim prefix="out_storage_form =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.OutStorageForm!=null">
+                        when id=#{item.Id} then #{item.OutStorageForm}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="truck =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Truck!=null">
+                        when id=#{item.Id} then #{item.Truck}
+                    </if>
+                </foreach>
+            </trim>
+			<trim prefix="time =case" suffix="end,">
+				<foreach collection="list" item="item">
+					<if test="item.Time!=null">
+						when id=#{item.Id} then #{item.Time}
+					</if>
+				</foreach>
+			</trim>
+            <trim prefix="distance =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Distance!=null">
+                        when id=#{item.Id} then #{item.Distance}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="gpsx =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.GPSX!=null">
+                        when id=#{item.Id} then #{item.GPSX}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="gpsy =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.GPSY!=null">
+                        when id=#{item.Id} then #{item.GPSY}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="speed =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Speed!=null">
+                        when id=#{item.Id} then #{item.Speed}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="fuel_vol =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.FuelVol!=null">
+                        when id=#{item.Id} then #{item.FuelVol}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="left_tire_pressure =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.LeftTirePressure!=null">
+                        when id=#{item.Id} then #{item.LeftTirePressure}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="right_tire_pressure =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.RightTirePressure!=null">
+                        when id=#{item.Id} then #{item.RightTirePressure}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="left_tire_temp =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.LeftTireTemp!=null">
+                        when id=#{item.Id} then #{item.LeftTireTemp}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="right_tire_temp =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.RightTireTemp!=null">
+                        when id=#{item.Id} then #{item.RightTireTemp}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="posture =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Posture!=null">
+                        when id=#{item.Id} then #{item.Posture}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="has_warn =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.HasWarn!=null">
+                        when id=#{item.Id} then #{item.HasWarn}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="warn =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.Warn!=null">
+                        when id=#{item.Id} then #{item.Warn}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            <foreach collection="list" separator="or" item="item">
+                id=#{item.Id}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="delete" parameterType="TruckLogBean">
+        update <include refid="t_truck_log"/>
+        <set>
+            delete_time = now(),
+			update_time = now(),
+            is_deleted =  true
+        </set>
+        <where>
+            id = #{Id}
+        </where>
+    </update>
+
+	<update id="deleteById" parameterType="long">
+		update <include refid="t_truck_log"/>
+		<set>
+			delete_time = now(),
+			update_time = now(),
+			is_deleted =  true
+		</set>
+		<where>
+			id = #{Id}
+		</where>
+	</update>
+	
+  	<select id="getById" parameterType="long" resultMap="beanMap">
+    	select * from <include refid="t_truck_log"/> where id = #{Id}
+  	</select>
+  	
+  	<select id="listAll" resultMap="beanMap">
+    	select * from <include refid="t_truck_log"/> order by id asc
+  	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="Id != null"> and id = #{Id}</if>
+		<if test="Corporation != null"> and corporation = #{Corporation}</if>
+		<if test="createTimeBegin != null"> and create_time &gt;= #{createTimeBegin}</if>
+		<if test="createTimeEnd != null"> and create_time &lt;= #{createTimeEnd}</if>
+		<if test="updateTimeBegin != null"> and update_time &gt;= #{updateTimeBegin}</if>
+		<if test="updateTimeEnd != null"> and update_time &lt;= #{updateTimeEnd}</if>
+		<if test="deleteTimeBegin != null"> and delete_time &gt;= #{deleteTimeBegin}</if>
+		<if test="deleteTimeEnd != null"> and delete_time &lt;= #{deleteTimeEnd}</if>
+        <if test="IfDeleted != null"> and is_deleted = #{IfDeleted}</if>
+        <if test="OutStorageForm != null"> and out_storage_form = #{OutStorageForm}</if>
+        <if test="Truck != null"> and truck = #{Truck}</if>
+        <if test="Time != null"> and time = #{Time}</if>
+        <if test="TimeBegin != null"> and time &gt;= #{TimeBegin}</if>
+        <if test="TimeEnd != null"> and time &lt;= #{TimeEnd}</if>
+        <if test="Warn != null"> and warn = #{Warn}</if>
+        <if test="HasWarn != null"> and has_warn = #{HasWarn}</if>
+        <!-- Like query -->
+		<!--<if test="InStorageNumber != null and InStorageNumber != ''"> and instorage_number like CONCAT(CONCAT('%', #{InStorageNumber}), '%')</if>-->
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="t_truck_log"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by id asc]]>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="t_truck_log"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by id asc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="t_truck_log"/>
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+	
+</mapper>

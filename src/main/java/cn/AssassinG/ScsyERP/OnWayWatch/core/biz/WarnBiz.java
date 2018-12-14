@@ -4,4 +4,6 @@ import cn.AssassinG.ScsyERP.OnWayWatch.facade.entity.Warn;
 import cn.AssassinG.ScsyERP.common.core.biz.BaseBiz;
 
 public interface WarnBiz extends BaseBiz<Warn> {
+    void addPicture(Long entityId, Long pictureId);
+    void removePicture(Long entityId, Long pictureId);
 }

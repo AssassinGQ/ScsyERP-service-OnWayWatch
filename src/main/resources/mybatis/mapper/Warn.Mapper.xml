@@ -15,14 +15,14 @@
         <result column="warn_type" property="WarnType" typeHandler="cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler" />
         <result column="status" property="Status" typeHandler="cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler" />
         <result column="warn_value" property="WarnValue" />
-        <result column="pictures" property="Pictures" typeHandler="cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler" />
+        <result column="pictures" property="Pictures" typeHandler="cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.LongHashSetTypeHandler" />
 	</resultMap>
 
 	<insert id="insert" parameterType="WarnBean" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="t_warn"/> (corporation, create_time, update_time, delete_time, is_deleted, out_storage_form, truck, truck_log, time,
                                                       gpsx, gpsy, warn_type, status, warn_value, pictures)
 		values (#{Corporation}, now(), now(), NULL , FALSE, #{OutStorageForm}, #{Truck}, #{TruckLog}, #{Time}, #{GPSX}, #{GPSY}, #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler},
-                  #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}, #{WarnValue}, #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler})
+                  #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}, #{WarnValue}, #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.LongHashSetTypeHandler})
 	</insert>
 
 	<insert id="batchInsert" parameterType="List" keyProperty="id" useGeneratedKeys="true">
@@ -31,7 +31,7 @@
 		values
         <foreach collection="list" item="obj" separator=",">
             (#{Corporation}, now(), now(), NULL , FALSE, #{OutStorageForm}, #{Truck}, #{TruckLog}, #{Time}, #{GPSX}, #{GPSY}, #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler},
-            #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}, #{WarnValue}, #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler})
+            #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler}, #{WarnValue}, #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.LongHashSetTypeHandler})
         </foreach>
 	</insert>
 	
@@ -48,7 +48,7 @@
             warn_type = #{WarnType,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnTypeHandler},
             status = #{Status,typeHandler=cn.AssassinG.ScsyERP.OnWayWatch.core.dao.MyBatisHandler.WarnStatusHandler},
             warn_value =  #{WarnValue},
-            pictures = #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler}
+            pictures = #{Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.LongHashSetTypeHandler}
 		</set>
 		<where>
 			id = #{Id}
@@ -129,7 +129,7 @@
             <trim prefix="pictures =case" suffix="end,">
                 <foreach collection="list" item="item">
                     <if test="item.Pictures!=null">
-                        when id=#{item.Id} then #{item.Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.HashSetTypeHandler}
+                        when id=#{item.Id} then #{item.Pictures,typeHandler=cn.AssassinG.ScsyERP.common.core.dao.MyBatisTypeHandler.LongHashSetTypeHandler}
                     </if>
                 </foreach>
             </trim>

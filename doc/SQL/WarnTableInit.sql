@@ -15,7 +15,7 @@ create table t_warn (
   time                DATETIME    NOT NULL DEFAULT now()  COMMENT '日志时间',
   gpsx                DOUBLE(6,2) NOT NULL                 COMMENT '经度',
   gpsy                DOUBLE(6,2) NOT NULL                 COMMENT '纬度',
-  warn_type           VARCHAR(10) NOT NULL                 COMMENT '异常类型',
+  warn_type           VARCHAR(15) NOT NULL                 COMMENT '异常类型',
   status              VARCHAR(20) NOT NULL                 COMMENT '异常状态',
   warn_value          TEXT                                  COMMENT '异常参数',
   pictures            TEXT                                  COMMENT '异常图片',
@@ -26,4 +26,4 @@ alter table t_warn comment '异常信息表';
 
 ## 权限的初始化数据
 insert into t_warn(corporation, out_storage_form, truck, truck_log, gpsx, gpsy, warn_type, status)
-        values (1, 1, 1, 1, 1.1, 2.2, "停车异常", "已创建");
+        values (1, 1, 1, 1, 1.1, 2.2, "abnormal_stop", "created");
